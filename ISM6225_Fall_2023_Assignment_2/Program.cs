@@ -1,5 +1,5 @@
-﻿/* 
- 
+/* 
+
 YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINATION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
@@ -35,6 +35,7 @@ namespace ISM6225_Fall_2023_Assignment_2
             //Question 3:
             Console.WriteLine("Question 3");
             int[] prices_array = { 7, 1, 5, 3, 6, 4 };
+            //int[] prices_array = {7, 6, 4, 3, 1};
             int max_profit = MaxProfit(prices_array);
             Console.WriteLine(max_profit);
             Console.WriteLine();
@@ -42,7 +43,7 @@ namespace ISM6225_Fall_2023_Assignment_2
 
             //Question 4:
             Console.WriteLine("Question 4");
-            string s1 = "69";
+            string s1 = "88";
             bool IsStrobogrammaticNumber = IsStrobogrammatic(s1);
             Console.WriteLine(IsStrobogrammaticNumber);
             Console.WriteLine();
@@ -112,15 +113,71 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                // Create a HashSet for efficient number lookup in the 'nums' array.
+                HashSet<int> numSet = new HashSet<int>(nums);
 
+                // Initialize a list to store the missing range(s).
+                List<int> missingRange = new List<int>();
+                IList<IList<int>> missingRanges = new List<IList<int>>();
+
+                // Exception Handling: Check if the 'nums' array is sorted in ascending order.
+                for (int i = 0; i < nums.Length - 1; i++)
+                {
+                    if (nums[i] > nums[i + 1])
+                    {
+                        throw new ArgumentException("Invalid Input: The given numbers array is not sorted in Ascending order.");
+                    }
+                }
+
+                // Iterate through the range from 'lower' to 'upper'.
+                for (int num = lower; num <= upper; num++)
+                {
+                    if (!numSet.Contains(num))
+                    {
+                        // If 'num' is not in 'nums', add it to the missingRange list.
+                        if (missingRange.Count == 0)
+                        {
+                            missingRange.Add(num);
+                        }
+                    }
+                    else
+                    {
+                        if (missingRange.Count == 1)
+                        {
+                            // If 'num' is in 'nums' and there's one missing number in the missingRange list,
+                            // set the second missing number to 'num - 1'.
+                            missingRange.Add(num - 1);
+                        }
+                    }
+
+                    if (missingRange.Count == 2)
+                    {
+                        // If there are two missing numbers in the missingRange list, add this range to the missingRanges and clear the missingRange list.
+                        missingRanges.Add(new List<int>(missingRange));
+                        missingRange.Clear();
+                    }
+                    else if (missingRange.Count == 1 && num == upper)
+                    {
+                        // If there's one missing number and we've reached the upper bound, add this range to the missingRanges and clear the missingRange list.
+                        missingRange.Add(num);
+                        missingRanges.Add(new List<int>(missingRange));
+                        missingRange.Clear();
+                    }
+                }
+
+                // Return the list of missing ranges.
+                return missingRanges;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and print an error message.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<IList<int>>(); // Return an empty list in case of an exception.
+            }
         }
+
+
+     
 
         /*
          
@@ -151,24 +208,50 @@ namespace ISM6225_Fall_2023_Assignment_2
 
         Time complexity:O(n^2), space complexity:O(1)
         */
-
         public static bool IsValid(string s)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return s.Length == 0;
+                // Check if the input string contains only brackets
+                if (s.All(c => c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']'))
+                {
+                    // Continue the loop until there are no more valid pairs of parentheses, curly braces, or square brackets
+                    while (s.Contains("()") || s.Contains("{}") || s.Contains("[]"))
+                    {
+                        // Replace all valid pairs with an empty string to eliminate them from the string
+                        s = s.Replace("()", "");
+                        s = s.Replace("{}", "");
+                        s = s.Replace("[]", "");
+
+                        // Output the current state of the string after replacements (for debugging purposes)
+                        Console.WriteLine(s);
+                    }
+
+                    // The string is valid if and only if it is empty at the end of the process     
+                    return s.Length == 0;
+                }
+                else
+                {
+                    // Throw an exception if the input string contains characters other than brackets
+                    throw new ArgumentException("Invalid Input: Enter the string only with Brackets.");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
+
+
 
         /*
 
         Question 3:
-        You are given an array prices where prices[i] is the price of a given stock on the ith day.You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+        You are given an array prices where prices[i] is the price of a given stock on the ith day.
+        You want to maximize your profit by choosing a single day to buy one stock and choosing a 
+        different day in the future to sell that stock.Return the maximum profit you can achieve 
+        from this transaction. If you cannot achieve any profit, return 0.
         Example 1:
         Input: prices = [7,1,5,3,6,4]
         Output: 5
@@ -191,19 +274,39 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 1;
+                // Write your code here and you can modify the return value according to
+                // the requirements
+                int max = 0;
+                int min = prices[0];
+
+                for (int i = 1; i < prices.Length; i++)
+                {
+                    if (prices[i] < min)
+                    {
+                        min = prices[i];
+                    }
+
+                    else if ((prices[i] - min) > max)
+                    {
+                        max = prices[i] - min;
+                    }
+                }
+                return max;
+               // return 1;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return 0; // Handle exceptions and return 0 in case of an exception.
             }
         }
 
         /*
         
         Question 4:
-        Given a string num which represents an integer, return true if num is a strobogrammatic number.A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+        Given a string num which represents an integer, return true if num is a 
+        strobogrammatic number.A strobogrammatic number is a number that looks the same 
+        when rotated 180 degrees (looked at upside down).
         Example 1:
 
         Input: num = "69"
@@ -224,17 +327,58 @@ namespace ISM6225_Fall_2023_Assignment_2
 
         Time complexity:O(n), space complexity:O(1)
         */
-
-        public static bool IsStrobogrammatic(string s)
+        public static bool IsStrobogrammatic(string n)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return false;
+                if(!int.TryParse(n, out int val))
+                {
+                    throw new Exception("enter valid number : ");
+                }
+                // Check if the input string is null or empty
+                if (string.IsNullOrEmpty(n))
+                {
+                    return true;
+                }
+
+                // Define a mapping of strobogrammatic digits
+                Dictionary<char, char> map = new Dictionary<char, char>
+                {
+                    {'0', '0'},
+                    {'1', '1'},
+                    {'8', '8'},
+                    {'6', '9'},
+                    {'9', '6'}
+                };
+
+                // Initialize two pointers for checking symmetry
+                int left = 0;
+                int right = n.Length-1;
+
+                // Iterate through the string from both ends
+                while (left <= right)
+                {
+                    // Check if the current digits are strobogrammatic
+                    if (!map.ContainsKey(n[right]) || n[left] != map[n[right]])
+                    {
+                        return false;
+                    }
+
+                    // Move the pointers towards the center
+                    left++;
+                    right--;
+                }
+
+                // The string is strobogrammatic
+                return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Handle specific exceptions if needed
+                //throw new Exception("Error in IsStrobogrammatic function", ex);
+                Console.WriteLine(ex.Message);
+                return false;
+
             }
         }
 
@@ -271,12 +415,32 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                Dictionary<int, int> ConstantsFrequency = new Dictionary<int, int>();
+                int count = 0;
+
+                // Iterate through the 'nums' array to count the number of identical pairs.
+                foreach (int num in nums)
+                {
+                    // Create a frequency Dictionary for each element in the given array.
+                    if (ConstantsFrequency.ContainsKey(num))
+                    {
+                        // If the element is already in the dictionary, increment 'count' with the frequency of the element.
+                        count += ConstantsFrequency[num];
+                        ConstantsFrequency[num]++;
+                    }
+                    else
+                    {
+                        // If the element is not in the dictionary, add it with a frequency of 1.
+                        ConstantsFrequency[num] = 1;
+                    }
+                }
+
+                return count; // Return the count of identical pairs.
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return 0; // Handle exceptions and return 0 in case of an exception.
             }
         }
 
@@ -321,12 +485,53 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                Dictionary<int, int> maxPositions = new Dictionary<int, int>();
+
+                // Sorting the array in ascending order to find the maximum values.
+                Array.Sort(nums);
+
+                int position = 0;
+                int value = 0;
+
+                // Create a dictionary with the top three distinct maximum elements in the array and their positions.
+                foreach (int num in nums.Reverse())
+                {
+                    if (!maxPositions.ContainsKey(num))
+                    {
+                        maxPositions[num] = ++position;
+                    }
+                    if (position == 3)
+                    {
+                        break;
+                    }
+                }
+
+                // Set 'maxValue' to either 3 (if three distinct maximums exist) or 1 (if only one or two distinct maximums exist).
+                int maxValue = new Int32();
+                if (maxPositions.Count == 3)
+                {
+                    maxValue = 3;
+                }
+                else
+                {
+                    maxValue = 1;
+                }
+
+                foreach (var entry in maxPositions)
+                {
+                    if (entry.Value == maxValue)
+                    {
+                        value = entry.Key; // Set 'value' to the key with the corresponding value equal to 'maxValue'.
+                    }
+                }
+
+                return value; // Return the third maximum (or maximum) value.
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"An error occurred: {ex.Message}");  // print an error message in case of exception.
+                return 0; // Handle exceptions and return 0 in case of an exception.
             }
         }
 
@@ -354,12 +559,34 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<string>() { };
+                List<string> possibleMoves = new List<string>();
+
+                // Exception handling: Check if the input string only contains characters '+' or '-'.
+                if (currentState.Any(ch => ch != '+' && ch != '-'))
+                {
+                    throw new ArgumentException("Enter the string with inputs '+' or '-'");
+                }
+
+                // Iterate through the input string to find consecutive '+' characters and create possible next moves.
+                foreach (var index in Enumerable.Range(0, currentState.Length - 1))
+                {
+                    if (currentState[index] == '+' && currentState[index + 1] == '+')
+                    {
+                        // Create a new string with the '+' characters flipped to '-' as a possible next move and add it to the list.
+                        char[] nextState = currentState.ToCharArray();
+                        nextState[index] = '-';
+                        nextState[index + 1] = '-';
+                        possibleMoves.Add(new string(nextState));
+                    }
+                }
+
+                return possibleMoves; // Return a list of possible next moves.
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"An error occurred: {ex.Message}");  // print an error message in case of an exception.
+                return new List<string>(); // Return an empty list in case of an exception.
             }
         }
 
@@ -381,10 +608,36 @@ namespace ISM6225_Fall_2023_Assignment_2
         Timecomplexity:O(n), Space complexity:O(n)
         */
 
-        public static string RemoveVowels(string s)
+        public static string RemoveVowels(string inputString)
         {
-            // Write your code here and you can modify the return value according to the requirements
-            return "";
+            try
+            {
+                // Create a HashSet containing vowels.
+                HashSet<string> vowels = new HashSet<string>
+            {
+                "a", "e", "i", "o", "u"
+            };
+
+                string result = "";
+
+                // Iterate through each character in the input string.
+                foreach (char character in inputString)
+                {
+                    // Check if the lowercase string representation of the character is not in the set of vowels.
+                    if (!vowels.Contains(character.ToString().ToLower()))
+                    {
+                        // Add characters from the given string to 'result' if they are not vowels.
+                        result += character;
+                    }
+                }
+
+                return result; // Return the resulting string with vowels removed.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");  // print an error message in case of an exception.
+                return ""; // Return an empty string in case of an exception.
+            }
         }
 
         /* Inbuilt Functions - Don't Change the below functions */
