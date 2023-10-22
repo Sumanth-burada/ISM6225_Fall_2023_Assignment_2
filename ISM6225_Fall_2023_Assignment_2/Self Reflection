@@ -1,0 +1,58 @@
+The Assignment ”Computational Problem Solving” offers a comprehensive learning experience, showcasing the utilization of various types of data structures such as like Hash set, Dictionary, Stacks, Lists and arrays, and best coding practices. 
+They exemplify the importance of data validation, including the handling of edge cases where unexpected or extreme inputs might occur, ensuring the reliability of the code. Additionally, these examples highlight the significance of exceptions,
+demonstrating how to gracefully handle errors and provide meaningful error messages to prevent code crashes. The use of conditional statements and loops, such as 'IfElse' and 'for'/’ForEach’/'While' loops, is evident throughout the code examples,
+enabling dynamic decision-making and efficient iteration, which are fundamental programming concepts.
+These are often used in conjunction with data structures like HashSet, Dictionary, Stack, and Lists to perform various operations on data efficiently.
+
+
+For Question 1
+
+self Reflection:
+The code attempted to find missing ranges but had complex logic and potential inefficiencies.
+The use of a HashSet for number lookup is a good strategy for efficient operations.
+Exception handling is implemented to address the case where the input array is not sorted.
+Simplify the algorithm by iterating through the numbers, tracking the start of potential missing ranges. Add ranges when a gap is found, and handle remaining elements after the loop.
+
+For Question 2
+
+self Reflection:
+The use of LINQ and string manipulations makes the logic concise.
+The approach of iteratively removing valid pairs of brackets is a simple and effective way to check the validity of the bracket configuration
+Overall he code accomplishes its task of checking the validity of bracket pairs, but there is room for improvement in terms of efficiency and documentation.
+
+For Question 3
+
+self Reflection:
+The code uses a simple loop to iterate through the prices array, keeping track of the minimum value (min) and the maximum profit (max).
+The time complexity of this algorithm is O(n) since it iterates through the prices array once.
+
+For Question 4
+
+self Reflection:
+The core logic of the algorithm involves checking the symmetry of the input string by comparing characters from both ends. This is a suitable approach for determining whether a number is strobogrammatic.
+The code uses a dictionary (map) to define the mapping of strobogrammatic digits, which is a good approach for clarity
+
+For Question 5
+
+self Reflection:
+The code uses a Dictionary to efficiently track the frequency of each element in the array. This is a good choice, as it allows constant-time lookup and insertion.
+The code assumes that the array contains only positive integers. If negative integers or other types of elements are possible, additional consideration and possibly a different approach might be needed.
+
+For Question 6
+
+self Reflection:
+sort the array in ascending order is a reasonable approach to finding the top three distinct maximum elements. Sorting allows for a more straightforward identification of the maximum values.
+The code demonstrates a good understanding of sorting, dictionary usage, and exception handling. The approach to finding the top three maximum elements is logical, and the code is generally well-structured.
+
+For Question 7
+
+self Reflection:
+The core logic for generating possible next moves seems to be correctly implemented, flipping consecutive '+' characters to '-'.
+The use of LINQ's Any and Enumerable.Range provides concise and expressive ways to check conditions and iterate over indices.
+
+
+For Question 8
+
+self Reflection:
+Utilizing a HashSet for storing vowels is a good choice, as it provides efficient lookup operations.
+The code follows a functional programming approach by iterating through each character and creating a new string without modifying the original string.
